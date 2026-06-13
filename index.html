@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,6 +124,37 @@ h1 .line2{color:var(--fire);display:block;}
 .team-name-label{font-family:'Oswald',sans-serif;font-size:.82rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;}
 .roast-badge{margin-left:auto;font-size:.62rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,69,0,.1);border:1px solid rgba(255,69,0,.2);color:var(--fire);padding:2px 8px;border-radius:10px;}
 .roast-body{padding:16px 14px;font-size:.9rem;line-height:1.75;color:#ccc;}
+
+/* AVATAR BATTLE */
+.avatar-battle{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:14px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;padding:20px 12px 16px;}
+.avatar-side{flex:1;display:flex;flex-direction:column;align-items:center;gap:8px;}
+.avatar-svg{width:80px;height:80px;border-radius:50%;border:2px solid var(--border);background:var(--surface2);overflow:hidden;}
+.avatar-nation{font-family:'Oswald',sans-serif;font-size:.72rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:center;}
+.avatar-star{font-size:.68rem;color:var(--fire);text-align:center;}
+.avatar-vs{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;color:var(--fire);padding:0 8px;line-height:1;flex-shrink:0;}
+
+/* MEME CARD */
+.meme-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+.meme-label{font-size:.62rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:10px 14px 0;text-align:center;}
+.meme-inner{padding:12px 14px 14px;}
+.meme-drake{display:flex;flex-direction:column;gap:3px;}
+.meme-row{display:flex;align-items:stretch;gap:0;border-radius:6px;overflow:hidden;min-height:52px;}
+.meme-emoji{width:48px;min-height:52px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;flex-shrink:0;}
+.meme-text{flex:1;padding:10px 12px;font-size:.82rem;line-height:1.45;display:flex;align-items:center;}
+.meme-row.no{background:rgba(255,69,0,.06);border:1px solid rgba(255,69,0,.15);}
+.meme-row.no .meme-emoji{background:rgba(255,69,0,.1);}
+.meme-row.no .meme-text{color:#ddd;}
+.meme-row.yes{background:rgba(0,200,83,.06);border:1px solid rgba(0,200,83,.15);}
+.meme-row.yes .meme-emoji{background:rgba(0,200,83,.1);}
+.meme-row.yes .meme-text{color:#ddd;}
+.meme-disaster{text-align:center;padding:4px 0 6px;}
+.meme-disaster-top{font-size:.75rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.meme-disaster-text{font-family:'Oswald',sans-serif;font-size:1.1rem;font-weight:600;color:var(--text);line-height:1.3;}
+.meme-disaster-sub{font-size:.75rem;color:var(--fire);margin-top:4px;}
+.meme-this-is-fine{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.fine-box{background:rgba(255,140,0,.06);border:1px solid rgba(255,140,0,.15);border-radius:6px;padding:10px;text-align:center;}
+.fine-box .fine-emoji{font-size:1.6rem;display:block;margin-bottom:4px;}
+.fine-box .fine-text{font-size:.72rem;color:#bbb;line-height:1.4;}
 
 /* CAMEO */
 .player-cameo{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px;display:flex;align-items:flex-start;gap:12px;}
@@ -250,6 +282,21 @@ footer a{color:var(--muted);text-decoration:none;}
     <button class="back-btn" onclick="resetApp()">↩ New burn</button>
   </div>
 
+  <!-- AVATAR BATTLE -->
+  <div class="avatar-battle" id="avatar-battle">
+    <div class="avatar-side">
+      <svg class="avatar-svg" id="avatar1" viewBox="0 0 80 80"></svg>
+      <div class="avatar-nation" id="av1-nation"></div>
+      <div class="avatar-star" id="av1-star"></div>
+    </div>
+    <div class="avatar-vs">VS</div>
+    <div class="avatar-side">
+      <svg class="avatar-svg" id="avatar2" viewBox="0 0 80 80"></svg>
+      <div class="avatar-nation" id="av2-nation"></div>
+      <div class="avatar-star" id="av2-star"></div>
+    </div>
+  </div>
+
   <div class="roast-card">
     <div class="roast-card-top">
       <div class="team-flag-big" id="r1-flag"></div>
@@ -257,6 +304,14 @@ footer a{color:var(--muted);text-decoration:none;}
       <div class="roast-badge">FREE</div>
     </div>
     <div class="roast-body" id="r1-body"></div>
+  </div>
+
+  <!-- MEME CARD 1: Drake format -->
+  <div class="meme-card" id="meme1-card">
+    <div class="meme-label">🐸 The Internet Reacts</div>
+    <div class="meme-inner">
+      <div class="meme-drake" id="meme1-content"></div>
+    </div>
   </div>
 
   <div class="player-cameo">
@@ -333,31 +388,66 @@ footer a{color:var(--muted);text-decoration:none;}
 
 <script>
 const TEAMS=[
-  {name:"Argentina",flag:"🇦🇷",moment:"2022 WC champions, Messi era"},
-  {name:"Brazil",flag:"🇧🇷",moment:"7-1 to Germany in 2014"},
-  {name:"France",flag:"🇫🇷",moment:"2018 champions, 2022 final heartbreak"},
-  {name:"England",flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",moment:"62 years of hurt, football coming home jokes"},
-  {name:"Germany",flag:"🇩🇪",moment:"4× champions, crashed out 2018 group stage"},
-  {name:"Spain",flag:"🇪🇸",moment:"2010 champions, tiki-taka era"},
-  {name:"Portugal",flag:"🇵🇹",moment:"zero World Cup trophies despite Ronaldo"},
-  {name:"Netherlands",flag:"🇳🇱",moment:"3× World Cup runners-up, never won"},
-  {name:"Italy",flag:"🇮🇹",moment:"failed to qualify 2018 and 2022"},
-  {name:"USA",flag:"🇺🇸",moment:"hosting 2026, golden generation pressure"},
-  {name:"Mexico",flag:"🇲🇽",moment:"Round of 16 every single tournament"},
-  {name:"Japan",flag:"🇯🇵",moment:"shocked Germany and Spain in 2022"},
-  {name:"South Korea",flag:"🇰🇷",moment:"semi-finalists 2002, Son era"},
-  {name:"Morocco",flag:"🇲🇦",moment:"first African semi-finalists 2022"},
-  {name:"Senegal",flag:"🇸🇳",moment:"AFCON champions, Mané era"},
-  {name:"Nigeria",flag:"🇳🇬",moment:"Super Eagles, always dramatic exits"},
-  {name:"Australia",flag:"🇦🇺",moment:"Socceroos, surprise 2022 run"},
-  {name:"Canada",flag:"🇨🇦",moment:"co-hosting 2026, Davies generation"},
-  {name:"Colombia",flag:"🇨🇴",moment:"James Rodríguez 2014 golden boot"},
-  {name:"Uruguay",flag:"🇺🇾",moment:"2× champions, Luis Suárez biting era"},
-  {name:"Croatia",flag:"🇭🇷",moment:"2018 runners-up, Modrić golden era"},
-  {name:"Denmark",flag:"🇩🇰",moment:"1992 Euro shock winners, Eriksen comeback"},
-  {name:"Switzerland",flag:"🇨🇭",moment:"always qualify, never go far"},
-  {name:"Saudi Arabia",flag:"🇸🇦",moment:"shocked Argentina 2022"},
-  {name:"Iran",flag:"🇮🇷",moment:"emotional 2022 group stage drama"},
+  // Group A
+  {name:"Mexico",flag:"🇲🇽",group:"A",moment:"Round of 16 every single tournament, cursed quarterfinal barrier"},
+  {name:"South Africa",flag:"🇿🇦",group:"A",moment:"2010 hosts, first African World Cup, Bafana Bafana"},
+  {name:"South Korea",flag:"🇰🇷",group:"A",moment:"semi-finalists 2002, Son Heung-min era"},
+  {name:"Czechia",flag:"🇨🇿",group:"A",moment:"Czech Golden Generation, Euro 1996 runners-up"},
+  // Group B
+  {name:"Canada",flag:"🇨🇦",group:"B",moment:"co-hosting 2026, Alphonso Davies golden generation"},
+  {name:"Bosnia & Herzegovina",flag:"🇧🇦",group:"B",moment:"only World Cup appearance 2014, Dzeko era"},
+  {name:"Qatar",flag:"🇶🇦",group:"B",moment:"2022 hosts, eliminated in group stage on home soil"},
+  {name:"Switzerland",flag:"🇨🇭",group:"B",moment:"always qualify, somehow never go far"},
+  // Group C
+  {name:"Brazil",flag:"🇧🇷",group:"C",moment:"7-1 humiliation vs Germany 2014, 5× champions"},
+  {name:"Morocco",flag:"🇲🇦",group:"C",moment:"first African semi-finalists ever in 2022"},
+  {name:"Haiti",flag:"🇭🇹",group:"C",moment:"World Cup debutants 2026, Caribbean dreamers"},
+  {name:"Scotland",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",group:"C",moment:"first World Cup since 1998, always dramatic exits"},
+  // Group D
+  {name:"USA",flag:"🇺🇸",group:"D",moment:"co-hosting 2026, golden generation under pressure"},
+  {name:"Paraguay",flag:"🇵🇾",group:"D",moment:"quarter-finalists 2010, South American dark horses"},
+  {name:"Australia",flag:"🇦🇺",group:"D",moment:"Socceroos surprise run to last 16 in 2022"},
+  {name:"Turkey",flag:"🇹🇷",group:"D",moment:"3rd place 2002, Hakan Çalhanoğlu era"},
+  // Group E
+  {name:"Germany",flag:"🇩🇪",group:"E",moment:"4× champions, crashed out group stage 2018"},
+  {name:"Curaçao",flag:"🇨🇼",group:"E",moment:"World Cup debutants 2026, Caribbean island nation"},
+  {name:"Ivory Coast",flag:"🇨🇮",group:"E",moment:"Drogba era legends, Afcon powerhouse"},
+  {name:"Ecuador",flag:"🇪🇨",group:"E",moment:"2002 debutants, 3 World Cups, Enner Valencia"},
+  // Group F
+  {name:"Netherlands",flag:"🇳🇱",group:"F",moment:"3× World Cup runners-up, Total Football legends, never won"},
+  {name:"Japan",flag:"🇯🇵",group:"F",moment:"shocked Germany and Spain in 2022 group stage"},
+  {name:"Tunisia",flag:"🇹🇳",group:"F",moment:"Africa's most consistent qualifiers, never past groups"},
+  {name:"Sweden",flag:"🇸🇪",group:"F",moment:"Zlatan era, semi-finalists 2018 without Ibrahimović"},
+  // Group G
+  {name:"Belgium",flag:"🇧🇪",group:"G",moment:"Golden Generation peak: 3rd place 2018, De Bruyne era"},
+  {name:"Egypt",flag:"🇪🇬",group:"G",moment:"Mo Salah's World Cup dream, 7× Africa Cup champions"},
+  {name:"Iran",flag:"🇮🇷",group:"G",moment:"emotional 2022 group stage, Taremi penalty vs USA"},
+  {name:"New Zealand",flag:"🇳🇿",group:"G",moment:"All Whites debutants again, Oceania's finest"},
+  // Group H
+  {name:"Spain",flag:"🇪🇸",group:"H",moment:"2010 champions, tiki-taka era, Lamine Yamal generation"},
+  {name:"Cabo Verde",flag:"🇨🇻",group:"H",moment:"World Cup debutants 2026, Atlantic island nation"},
+  {name:"Saudi Arabia",flag:"🇸🇦",group:"H",moment:"shocked Argentina 2022 with legendary upset"},
+  {name:"Uruguay",flag:"🇺🇾",group:"H",moment:"2× World Cup champions, Suárez biting era"},
+  // Group I
+  {name:"France",flag:"🇫🇷",group:"I",moment:"2018 champions, heartbreaking 2022 final penalty loss"},
+  {name:"Senegal",flag:"🇸🇳",group:"I",moment:"AFCON champions 2022, Mané era, 2002 semi-finalists"},
+  {name:"Iraq",flag:"🇮🇶",group:"I",moment:"World Cup debutants 2026, Asian Cup 2007 champions"},
+  {name:"Norway",flag:"🇳🇴",group:"I",moment:"Haaland's World Cup debut, first appearance since 1998"},
+  // Group J
+  {name:"Argentina",flag:"🇦🇷",group:"J",moment:"2022 World Cup champions, Messi's crowning glory"},
+  {name:"Algeria",flag:"🇩🇿",group:"J",moment:"2014 last 16, Mahrez era, AFCON 2019 champions"},
+  {name:"Austria",flag:"🇦🇹",group:"J",moment:"last reached semis in 1954, Alaba era revival"},
+  {name:"Jordan",flag:"🇯🇴",group:"J",moment:"World Cup debutants 2026, Asian Cup runners-up 2023"},
+  // Group K
+  {name:"Portugal",flag:"🇵🇹",group:"K",moment:"zero World Cup trophies despite Ronaldo's entire career"},
+  {name:"DR Congo",flag:"🇨🇩",group:"K",moment:"first World Cup since Zaire 1974, African giants return"},
+  {name:"Uzbekistan",flag:"🇺🇿",group:"K",moment:"World Cup debutants 2026, Central Asia's breakthrough"},
+  {name:"Colombia",flag:"🇨🇴",group:"K",moment:"James Rodríguez 2014 golden boot, 2024 Copa finalists"},
+  // Group L
+  {name:"England",flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",group:"L",moment:"62 years of hurt, it's coming home jokes, 2024 Euro final loss"},
+  {name:"Croatia",flag:"🇭🇷",group:"L",moment:"2018 runners-up, Modrić Ballon d'Or, tiny nation giant results"},
+  {name:"Ghana",flag:"🇬🇭",group:"L",moment:"Black Stars, Suárez handball 2010 quarter-final injustice"},
+  {name:"Panama",flag:"🇵🇦",group:"L",moment:"only second World Cup, scored vs England 2018"},
 ];
 
 const HOT=[
@@ -366,9 +456,11 @@ const HOT=[
   {t1:"Argentina",t2:"France",label:"🇦🇷 vs 🇫🇷 2022 Final"},
   {t1:"Portugal",t2:"Spain",label:"🇵🇹 vs 🇪🇸 Iberian War"},
   {t1:"USA",t2:"Mexico",label:"🇺🇸 vs 🇲🇽 El Clásico"},
-  {t1:"Japan",t2:"Germany",label:"🇯🇵 vs 🇩🇪 2022 upset"},
-  {t1:"Italy",t2:"England",label:"🇮🇹 vs 🏴󠁧󠁢󠁥󠁮󠁧󠁿 EURO 2020 Final"},
-  {t1:"Netherlands",t2:"Germany",label:"🇳🇱 vs 🇩🇪 Bitter neighbours"},
+  {t1:"Japan",t2:"Germany",label:"🇯🇵 vs 🇩🇪 2022 Shock"},
+  {t1:"England",t2:"Ghana",label:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 vs 🇬🇭 Group L clash"},
+  {t1:"Norway",t2:"France",label:"🇳🇴 vs 🇫🇷 Haaland's debut"},
+  {t1:"Morocco",t2:"Brazil",label:"🇲🇦 vs 🇧🇷 Group C fire"},
+  {t1:"Scotland",t2:"Brazil",label:"🏴󠁧󠁢󠁳󠁣󠁴󠁿 vs 🇧🇷 David vs Goliath"},
 ];
 
 const STARS=[
@@ -379,7 +471,9 @@ const STARS=[
   {name:"Portugal",flag:"🇵🇹",player:"Ronaldo"},
   {name:"Germany",flag:"🇩🇪",player:"Müller"},
   {name:"Spain",flag:"🇪🇸",player:"Yamal"},
+  {name:"Norway",flag:"🇳🇴",player:"Haaland"},
   {name:"Morocco",flag:"🇲🇦",player:"Hakimi"},
+  {name:"Colombia",flag:"🇨🇴",player:"Díaz"},
 ];
 
 const TICKER=[
@@ -393,7 +487,139 @@ const TICKER=[
   {flag:"🇲🇽",t:"Mexico",f:"eliminated Round of 16. Again."},
 ];
 
-const LOAD_MSGS=[
+// ===== SVG AVATARS =====
+// Each avatar: jersey color, hair style, skin tone, special feature
+const AVATARS={
+  "Argentina":{jersey:"#75AADB",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#FDBCB4",feature:"crown",star:"Messi"},
+  "Brazil":{jersey:"#FFD700",jersey2:"#009C3B",hair:"#1a1a1a",skin:"#C68642",feature:"smile",star:"Vinicius Jr"},
+  "France":{jersey:"#002395",jersey2:"#ED2939",hair:"#1a1a1a",skin:"#8D5524",feature:"cool",star:"Mbappé"},
+  "England":{jersey:"#FFFFFF",jersey2:"#CF081F",hair:"#C8A97E",skin:"#FDBCB4",feature:"sad",star:"Bellingham"},
+  "Germany":{jersey:"#FFFFFF",jersey2:"#000000",hair:"#F5D98B",skin:"#FDBCB4",feature:"serious",star:"Müller"},
+  "Spain":{jersey:"#AA151B",jersey2:"#F1BF00",hair:"#1a1a1a",skin:"#FDBCB4",feature:"smile",star:"Yamal"},
+  "Portugal":{jersey:"#006600",jersey2:"#FF0000",hair:"#1a1a1a",skin:"#FDBCB4",feature:"swag",star:"Ronaldo"},
+  "Netherlands":{jersey:"#FF6600",jersey2:"#FFFFFF",hair:"#F5D98B",skin:"#FDBCB4",feature:"cool",star:"Van Dijk"},
+  "Belgium":{jersey:"#ED2939",jersey2:"#000000",hair:"#C8A97E",skin:"#FDBCB4",feature:"smile",star:"De Bruyne"},
+  "Croatia":{jersey:"#FF0000",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#FDBCB4",feature:"serious",star:"Modrić"},
+  "Mexico":{jersey:"#006847",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#C68642",feature:"mustache",star:"Lozano"},
+  "USA":{jersey:"#002868",jersey2:"#BF0A30",hair:"#C8A97E",skin:"#FDBCB4",feature:"cool",star:"Pulisic"},
+  "Canada":{jersey:"#FF0000",jersey2:"#FFFFFF",hair:"#C8A97E",skin:"#FDBCB4",feature:"smile",star:"Davies"},
+  "Brazil":{jersey:"#FFD700",jersey2:"#009C3B",hair:"#1a1a1a",skin:"#C68642",feature:"smile",star:"Vinicius Jr"},
+  "Morocco":{jersey:"#C1272D",jersey2:"#006233",hair:"#1a1a1a",skin:"#8D5524",feature:"cool",star:"Hakimi"},
+  "Senegal":{jersey:"#FFFFFF",jersey2:"#00853F",hair:"#1a1a1a",skin:"#4A2912",feature:"smile",star:"Mané"},
+  "Japan":{jersey:"#002FA7",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#FDBCB4",feature:"serious",star:"Mitoma"},
+  "South Korea":{jersey:"#CE1126",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#FDBCB4",feature:"cool",star:"Son"},
+  "Australia":{jersey:"#FFD700",jersey2:"#009B77",hair:"#C8A97E",skin:"#FDBCB4",feature:"smile",star:"Hrustic"},
+  "Norway":{jersey:"#EF2B2D",jersey2:"#FFFFFF",hair:"#F5D98B",skin:"#FDBCB4",feature:"cool",star:"Haaland"},
+  "Scotland":{jersey:"#003DA5",jersey2:"#FFFFFF",hair:"#C8A97E",skin:"#FDBCB4",feature:"angry",star:"McTominay"},
+  "Colombia":{jersey:"#FFD700",jersey2:"#003087",hair:"#1a1a1a",skin:"#C68642",feature:"smile",star:"Díaz"},
+  "Uruguay":{jersey:"#5CBFEB",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#FDBCB4",feature:"angry",star:"Núñez"},
+  "Switzerland":{jersey:"#FF0000",jersey2:"#FFFFFF",hair:"#C8A97E",skin:"#FDBCB4",feature:"serious",star:"Xhaka"},
+  "Turkey":{jersey:"#E30A17",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#C68642",feature:"cool",star:"Çalhanoğlu"},
+  "Sweden":{jersey:"#006AA7",jersey2:"#FECC02",hair:"#F5D98B",skin:"#FDBCB4",feature:"smile",star:"Isak"},
+  "Saudi Arabia":{jersey:"#006C35",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#C68642",feature:"serious",star:"Al-Dawsari"},
+  "Iran":{jersey:"#239F40",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#C68642",feature:"cool",star:"Taremi"},
+  "Ecuador":{jersey:"#FFD700",jersey2:"#00338D",hair:"#1a1a1a",skin:"#C68642",feature:"smile",star:"Valencia"},
+  "Paraguay":{jersey:"#FFFFFF",jersey2:"#D52B1E",hair:"#1a1a1a",skin:"#C68642",feature:"serious",star:"Alonso"},
+  "Egypt":{jersey:"#CC0001",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#8D5524",feature:"swag",star:"Salah"},
+  "Ivory Coast":{jersey:"#FF6600",jersey2:"#009A44",hair:"#1a1a1a",skin:"#4A2912",feature:"smile",star:"Zaha"},
+  "Algeria":{jersey:"#FFFFFF",jersey2:"#006233",hair:"#1a1a1a",skin:"#8D5524",feature:"cool",star:"Mahrez"},
+  "Ghana":{jersey:"#006B3F",jersey2:"#FCD116",hair:"#1a1a1a",skin:"#4A2912",feature:"angry",star:"Kudus"},
+  "Tunisia":{jersey:"#E70013",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#8D5524",feature:"serious",star:"Msakni"},
+  "South Africa":{jersey:"#FFC72C",jersey2:"#007A4D",hair:"#1a1a1a",skin:"#4A2912",feature:"smile",star:"Tau"},
+  "New Zealand":{jersey:"#FFFFFF",jersey2:"#000000",hair:"#1a1a1a",skin:"#FDBCB4",feature:"cool",star:"Wood"},
+  "Qatar":{jersey:"#8D1B3D",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#C68642",feature:"serious",star:"Al-Haydos"},
+  "Bosnia & Herzegovina":{jersey:"#002395",jersey2:"#FFD700",hair:"#1a1a1a",skin:"#FDBCB4",feature:"cool",star:"Džeko"},
+  "Haiti":{jersey:"#00209F",jersey2:"#D21034",hair:"#1a1a1a",skin:"#4A2912",feature:"smile",star:"Lamothe"},
+  "Curaçao":{jersey:"#002B7F",jersey2:"#F9E814",hair:"#1a1a1a",skin:"#8D5524",feature:"cool",star:"Bonevacia"},
+  "Austria":{jersey:"#ED2939",jersey2:"#FFFFFF",hair:"#C8A97E",skin:"#FDBCB4",feature:"serious",star:"Alaba"},
+  "Jordan":{jersey:"#007A3D",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#C68642",feature:"smile",star:"Al-Naimat"},
+  "DR Congo":{jersey:"#007FFF",jersey2:"#CE1126",hair:"#1a1a1a",skin:"#4A2912",feature:"cool",star:"Kakuta"},
+  "Uzbekistan":{jersey:"#1EB53A",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#C68642",feature:"serious",star:"Shomurodov"},
+  "Iraq":{jersey:"#CE1126",jersey2:"#FFFFFF",hair:"#1a1a1a",skin:"#8D5524",feature:"smile",star:"Ameen"},
+  "Cabo Verde":{jersey:"#003893",jersey2:"#CF2027",hair:"#1a1a1a",skin:"#8D5524",feature:"cool",star:"Tavares"},
+  "Panama":{jersey:"#FFFFFF",jersey2:"#DA121A",hair:"#1a1a1a",skin:"#C68642",feature:"smile",star:"Davis"},
+  "Czechia":{jersey:"#D7141A",jersey2:"#FFFFFF",hair:"#F5D98B",skin:"#FDBCB4",feature:"serious",star:"Souček"},
+};
+
+function drawAvatar(svgEl, teamName){
+  const d = AVATARS[teamName] || {jersey:"#666",jersey2:"#444",hair:"#333",skin:"#FDBCB4",feature:"smile"};
+  const features = {
+    smile:`<path d="M28 46 Q40 54 52 46" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+    sad:`<path d="M28 50 Q40 44 52 50" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/>`,
+    serious:`<line x1="28" y1="48" x2="52" y2="48" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>`,
+    cool:`<path d="M28 46 Q40 54 52 46" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/><rect x="24" y="32" width="14" height="7" rx="3" fill="#1a1a1a" opacity=".85"/><rect x="42" y="32" width="14" height="7" rx="3" fill="#1a1a1a" opacity=".85"/>`,
+    swag:`<path d="M28 46 Q40 56 52 46" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/><rect x="24" y="32" width="14" height="7" rx="3" fill="#1a1a1a" opacity=".85"/><rect x="42" y="32" width="14" height="7" rx="3" fill="#1a1a1a" opacity=".85"/>`,
+    angry:`<path d="M28 50 Q40 44 52 50" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/><line x1="24" y1="28" x2="34" y2="33" stroke="#333" stroke-width="2"/><line x1="56" y1="28" x2="46" y2="33" stroke="#333" stroke-width="2"/>`,
+    mustache:`<path d="M28 46 Q40 54 52 46" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/><path d="M30 42 Q36 38 40 42 Q44 38 50 42" stroke="#333" stroke-width="2" fill="none"/>`,
+    crown:`<path d="M28 46 Q40 54 52 46" stroke="#333" stroke-width="2.5" fill="none" stroke-linecap="round"/><polygon points="25,18 32,10 40,16 48,10 55,18 52,22 28,22" fill="#FFD700" stroke="#FFA500" stroke-width="1"/>`,
+  };
+  svgEl.innerHTML=`
+    <circle cx="40" cy="40" r="40" fill="${d.jersey}"/>
+    <ellipse cx="40" cy="58" rx="22" ry="14" fill="${d.jersey2}" opacity=".7"/>
+    <circle cx="40" cy="35" r="18" fill="${d.skin}"/>
+    <ellipse cx="40" cy="22" rx="18" ry="12" fill="${d.hair}"/>
+    <circle cx="33" cy="33" r="3" fill="#333"/>
+    <circle cx="47" cy="33" r="3" fill="#333"/>
+    <circle cx="34" cy="32" r="1" fill="#fff"/>
+    <circle cx="48" cy="32" r="1" fill="#fff"/>
+    <ellipse cx="40" cy="38" rx="3" ry="2" fill="${d.skin}" stroke="#ccc" stroke-width=".5"/>
+    ${features[d.feature]||features.smile}
+  `;
+}
+
+// ===== MEME GENERATOR =====
+const MEME_TEMPLATES=[
+  (t1,t2,r)=>({type:'drake',
+    no:`Accepting that ${t1.name} might be decent`,
+    yes:`Watching ${t1.name} fans explain why ${r.roast1.split('.')[0].substring(0,60)}...`
+  }),
+  (t1,t2,r)=>({type:'drake',
+    no:`${t2.name} fans having realistic expectations`,
+    yes:`${t2.name} fans after every group stage win: "WE'RE WINNING THE WHOLE THING"`
+  }),
+  (t1,t2,r)=>({type:'disaster',
+    top:`${t1.name} vs ${t2.name}`,
+    main:`Both fanbases when their team concedes in the 89th minute`,
+    sub:`💀 No survivors on either side`
+  }),
+  (t1,t2,r)=>({type:'fine',
+    items:[
+      {e:'🔥',t:`${t1.name} fans watching their team press wrong`},
+      {e:'☕',t:`"This is fine." — ${t1.name} coaching staff`},
+      {e:'😭',t:`${t2.name} fans remembering that penalty miss`},
+      {e:'🤡',t:`Both managers explaining their tactics`},
+    ]
+  }),
+];
+
+function renderMeme(t1,t2,roastData){
+  const tmpl = MEME_TEMPLATES[Math.floor(Math.random()*MEME_TEMPLATES.length)](t1,t2,roastData);
+  const el = document.getElementById('meme1-content');
+  if(tmpl.type==='drake'){
+    el.innerHTML=`
+      <div class="meme-row no">
+        <div class="meme-emoji">😒</div>
+        <div class="meme-text">${tmpl.no}</div>
+      </div>
+      <div style="height:3px;"></div>
+      <div class="meme-row yes">
+        <div class="meme-emoji">👉</div>
+        <div class="meme-text">${tmpl.yes}</div>
+      </div>`;
+  } else if(tmpl.type==='disaster'){
+    el.innerHTML=`<div class="meme-disaster">
+      <div class="meme-disaster-top">${tmpl.top}</div>
+      <div class="meme-disaster-text">${tmpl.main}</div>
+      <div class="meme-disaster-sub">${tmpl.sub}</div>
+    </div>`;
+  } else if(tmpl.type==='fine'){
+    el.innerHTML=`<div class="meme-this-is-fine">${
+      tmpl.items.map(i=>`<div class="fine-box"><span class="fine-emoji">${i.e}</span><div class="fine-text">${i.t}</div></div>`).join('')
+    }</div>`;
+  }
+}
+
+
   "Consulting 90 years of football trauma...",
   "Reviewing every controversial VAR decision...",
   "Counting penalty shootout failures...",
@@ -406,10 +632,14 @@ const state={intensity:'spicy',team1:null,team2:null,roast2:null};
 function init(){
   // Selects
   const s1=document.getElementById('team1'),s2=document.getElementById('team2');
-  TEAMS.forEach(t=>{
+  // Group teams by group letter
+  const groups={};
+  TEAMS.forEach(t=>{if(!groups[t.group])groups[t.group]=[];groups[t.group].push(t);});
+  Object.keys(groups).sort().forEach(g=>{
     [s1,s2].forEach(s=>{
-      const o=document.createElement('option');
-      o.value=t.name;o.textContent=t.flag+' '+t.name;s.appendChild(o);
+      const og=document.createElement('optgroup');og.label='Group '+g;
+      groups[g].forEach(t=>{const o=document.createElement('option');o.value=t.name;o.textContent=t.flag+' '+t.name;og.appendChild(o);});
+      s.appendChild(og);
     });
   });
 
@@ -497,17 +727,39 @@ async function startRoast(){
 function renderResult(t1,t2,data){
   state.roast2=data.roast2;
   document.getElementById('result-matchup').innerHTML=`${t1.flag} ${t1.name} <span>VS</span> ${t2.flag} ${t2.name}`;
+
+  // Draw SVG avatars
+  drawAvatar(document.getElementById('avatar1'), t1.name);
+  drawAvatar(document.getElementById('avatar2'), t2.name);
+  const av1=AVATARS[t1.name]||{star:''};
+  const av2=AVATARS[t2.name]||{star:''};
+  document.getElementById('av1-nation').textContent=t1.flag+' '+t1.name;
+  document.getElementById('av2-nation').textContent=t2.flag+' '+t2.name;
+  document.getElementById('av1-star').textContent=av1.star?'⭐ '+av1.star:'';
+  document.getElementById('av2-star').textContent=av2.star?'⭐ '+av2.star:'';
+
+  // Roast 1
   document.getElementById('r1-flag').textContent=t1.flag;
   document.getElementById('r1-name').textContent=t1.name+' fans';
   document.getElementById('r1-body').textContent=data.roast1;
+
+  // Meme card
+  renderMeme(t1,t2,data);
+
+  // Cameo
   document.getElementById('cameo-avatar').textContent=data.cameo_flag||'⭐';
   document.getElementById('cameo-name').textContent=data.cameo_player||'World Cup Legend';
   document.getElementById('cameo-role').textContent=(data.cameo_nation||'')+' · AI Commentary';
   document.getElementById('cameo-quote').textContent='"'+(data.cameo_quote||'')+'"';
+
+  // Verdict
   document.getElementById('verdict-text').textContent=data.verdict;
+
+  // Paywall
   document.getElementById('r2-flag').textContent=t2.flag;
   document.getElementById('r2-name').textContent=t2.name+' fans';
   document.getElementById('r2-preview').textContent=(data.roast2||'').substring(0,100)+'...';
+
   const rs=document.getElementById('result-section');
   rs.classList.add('show');rs.scrollIntoView({behavior:'smooth'});
 }
