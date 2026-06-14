@@ -1,25 +1,34 @@
 export const config = { runtime: 'edge' };
 
 export default async function handler(req) {
-  // Only allow POST
-  if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
-
-  // CORS headers
   const headers = {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
   };
 
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers });
+  }
+
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405, headers
+    });
+  }
+
   try {
+    const apiKey = process.env.ANTHROPIC_API_KEY;
+    if (!apiKey) {
+      console.error('ANTHROPIC_API_KEY is not set');
+      return new Response(JSON.stringify({ error: 'API key not configured' }), {
+        status: 500, headers
+      });
+    }
+
     const { team1, team2, intensity, t1moment, t2moment } = await req.json();
 
-    // Validate input
     if (!team1 || !team2 || team1 === team2) {
       return new Response(JSON.stringify({ error: 'Invalid teams' }), {
         status: 400, headers
@@ -59,11 +68,13 @@ RESPOND ONLY IN THIS EXACT JSON FORMAT (no extra text, no markdown):
   "cameo_quote": "1-2 sentence sarcastic reaction from that player's perspective"
 }`;
 
+    console.log(`Roast request: ${team1} vs ${team2}, intensity: ${intensity}`);
+
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
       },
       body: JSON.stringify({
@@ -73,17 +84,36 @@ RESPOND ONLY IN THIS EXACT JSON FORMAT (no extra text, no markdown):
       })
     });
 
+    if (!response.ok) {
+      const errBody = await response.text();
+      console.error(`Anthropic API error ${response.status}: ${errBody}`);
+      return new Response(JSON.stringify({
+        error: 'AI generation failed',
+        status: response.status,
+        detail: errBody
+      }), { status: 502, headers });
+    }
+
     const data = await response.json();
     const raw = data.content?.[0]?.text || '';
+
+    if (!raw) {
+      console.error('Empty response from Anthropic:', JSON.stringify(data));
+      return new Response(JSON.stringify({ error: 'Empty AI response' }), {
+        status: 502, headers
+      });
+    }
+
     const clean = raw.replace(/```json|```/g, '').trim();
     const parsed = JSON.parse(clean);
 
     return new Response(JSON.stringify(parsed), { status: 200, headers });
 
   } catch (err) {
-    console.error('Roast API error:', err);
-    return new Response(JSON.stringify({ error: 'Generation failed' }), {
-      status: 500, headers
-    });
+    console.error('Roast API error:', err.message, err.stack);
+    return new Response(JSON.stringify({
+      error: 'Generation failed',
+      detail: err.message
+    }), { status: 500, headers });
   }
 }
