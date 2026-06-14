@@ -1035,7 +1035,7 @@ function renderResult(t1,t2,data){
 function handleUnlock(){
   // REPLACE THIS URL with your actual Stripe Payment Link
   // Get it from: dashboard.stripe.com → Payment Links → Create
-  const STRIPE_URL='https://buy.stripe.com/REPLACE_WITH_YOUR_LINK';
+  const STRIPE_URL='https://buy.stripe.com/cNi6oGfpD7VJ8OF8VCaR21A';
   window.open(STRIPE_URL,'_blank');
   // After payment success, Stripe redirects back with ?unlocked=true
   if(new URLSearchParams(location.search).get('unlocked')==='true') unlockRoast2();
