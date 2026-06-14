@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -167,17 +168,21 @@ h1 .line2{color:var(--fire);display:block;}
 .verdict-top{font-size:.68rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;}
 .verdict-text{font-family:'Oswald',sans-serif;font-size:1.05rem;font-weight:500;line-height:1.45;color:var(--text);}
 
-/* PAYWALL */
+/* SHARE TO UNLOCK */
 .paywall-wrap{position:relative;border-radius:12px;overflow:hidden;margin-bottom:12px;}
 .paywall-content-blur{filter:blur(5px);user-select:none;pointer-events:none;}
 .paywall-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,8,8,0) 0%,rgba(8,8,8,.7) 30%,rgba(8,8,8,.97) 60%);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:20px 16px 22px;text-align:center;}
 .paywall-icon{font-size:1.8rem;margin-bottom:8px;}
 .paywall-h{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.06em;margin-bottom:4px;}
 .paywall-sub{font-size:.78rem;color:var(--muted);line-height:1.5;margin-bottom:14px;}
-.unlock-btn{width:100%;max-width:280px;background:var(--gold);color:#000;border:none;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:.08em;padding:13px 20px;border-radius:8px;cursor:pointer;transition:transform .12s;}
-.unlock-btn:active{transform:scale(.97);}
+.share-unlock-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:300px;margin-bottom:8px;}
+.share-unlock-btn{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-family:'Inter',sans-serif;font-size:.78rem;font-weight:500;padding:10px 8px;border-radius:8px;cursor:pointer;transition:all .15s;}
+.share-unlock-btn:hover{border-color:var(--fire);color:var(--fire);}
+.share-unlock-btn.wa{background:rgba(37,211,102,.1);border-color:rgba(37,211,102,.3);color:#25d366;}
+.share-unlock-btn.tw{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.15);color:var(--text);}
 .unlock-note{font-size:.68rem;color:var(--muted);margin-top:6px;}
 .unlock-note span{color:var(--green);}
+.unlocked-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(0,200,83,.1);border:1px solid rgba(0,200,83,.3);color:var(--green);font-size:.72rem;font-weight:500;padding:4px 12px;border-radius:20px;margin-bottom:10px;}
 
 /* SHARE */
 .share-section{margin-bottom:16px;}
@@ -410,10 +415,19 @@ footer a{color:var(--muted);text-decoration:none;}
     </div>
     <div class="paywall-overlay">
       <div class="paywall-icon">🔒</div>
-      <div class="paywall-h">Unlock the Full Burn</div>
-      <div class="paywall-sub">Your rival's complete roast is locked.<br>$2.99 — they deserve everything they get.</div>
-      <button class="unlock-btn" onclick="handleUnlock()">UNLOCK FOR $2.99 🔥</button>
-      <div class="unlock-note"><span>✓</span> Stripe secure · instant · one-time</div>
+      <div class="paywall-h">Unlock Your Rival's Burn</div>
+      <div class="paywall-sub">Share this roast to unlock the full burn on your rival fans — FREE 🔥</div>
+      <div class="share-unlock-grid">
+        <button class="share-unlock-btn wa" onclick="shareUnlockWhatsApp()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.126.554 4.12 1.522 5.855L.057 24l6.304-1.654A11.954 11.954 0 0 0 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.782 9.782 0 0 1-5.003-1.371l-.36-.214-3.733.979 1-3.647-.234-.374A9.784 9.784 0 0 1 2.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+          WhatsApp
+        </button>
+        <button class="share-unlock-btn tw" onclick="shareUnlockTwitter()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.74l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Post on X
+        </button>
+      </div>
+      <div class="unlock-note"><span>✓</span> Free · Share once · Instant unlock</div>
     </div>
   </div>
 
@@ -1032,18 +1046,26 @@ function renderResult(t1,t2,data){
   rs.classList.add('show');rs.scrollIntoView({behavior:'smooth'});
 }
 
-function handleUnlock(){
-  // REPLACE THIS URL with your actual Stripe Payment Link
-  // Get it from: dashboard.stripe.com → Payment Links → Create
-  const STRIPE_URL='https://buy.stripe.com/REPLACE_WITH_YOUR_LINK';
-  window.open(STRIPE_URL,'_blank');
-  // After payment success, Stripe redirects back with ?unlocked=true
-  if(new URLSearchParams(location.search).get('unlocked')==='true') unlockRoast2();
+function shareUnlockWhatsApp(){
+  const t1=state.team1,t2=state.team2;
+  const text=`🔥 AI just BURNED ${t1.flag} ${t1.name} vs ${t2.flag} ${t2.name} fans using real World Cup history 💀\n\nSee the full roast 👇\nRivalBurn.live`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank');
+  setTimeout(()=>unlockRoast2('WhatsApp'),1500);
 }
 
-function unlockRoast2(){
+function shareUnlockTwitter(){
+  const t1=state.team1,t2=state.team2;
+  const text=`🔥 AI just BURNED ${t1.flag} ${t1.name} vs ${t2.flag} ${t2.name} fans using real World Cup history 💀\n\nRivalBurn.live — World Cup 2026`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`,'_blank');
+  setTimeout(()=>unlockRoast2('X'),1500);
+}
+
+function unlockRoast2(platform){
   const t2=state.team2;
   document.getElementById('paywall-wrap').innerHTML=`
+    <div style="text-align:center;padding:10px 0 6px;">
+      <div class="unlocked-badge">✓ Unlocked via ${platform||'share'}</div>
+    </div>
     <div class="roast-card">
       <div class="roast-card-top">
         <div class="team-flag-big">${t2.flag}</div>
@@ -1055,9 +1077,9 @@ function unlockRoast2(){
   showToast('🔥 Unlocked! Now send this to their fans.');
 }
 
-// Check if returning from Stripe payment
+// Check if returning from share redirect
 if(new URLSearchParams(location.search).get('unlocked')==='true'){
-  setTimeout(()=>unlockRoast2(),500);
+  setTimeout(()=>unlockRoast2('share'),500);
 }
 
 function resetApp(){
