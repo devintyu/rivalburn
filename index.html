@@ -197,6 +197,54 @@ h1 .line2{color:var(--fire);display:block;}
 
 footer{text-align:center;padding:20px 16px 40px;font-size:.7rem;color:var(--muted);border-top:1px solid var(--border);}
 footer a{color:var(--muted);text-decoration:none;}
+
+/* LIVE SCORES SECTION */
+.scores-section{padding:0 16px 4px;}
+.scores-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
+.scores-title{font-size:.68rem;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.scores-updated{font-size:.62rem;color:var(--muted);opacity:.6;}
+.scores-tabs{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px;}
+.scores-tabs::-webkit-scrollbar{display:none;}
+.scores-tab{flex-shrink:0;font-size:.72rem;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.scores-tab.active{background:var(--fire);border-color:var(--fire);color:#fff;}
+.scores-tab .live-pip{display:inline-block;width:5px;height:5px;border-radius:50%;background:#fff;margin-right:4px;animation:blink 1s infinite;}
+
+/* MATCH CARD */
+.match-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .15s;position:relative;overflow:hidden;}
+.match-card:hover{border-color:rgba(255,69,0,.4);}
+.match-card.live-card{border-color:rgba(255,69,0,.3);background:rgba(255,69,0,.03);}
+.match-card.live-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--fire),var(--fire2));}
+.match-stage{font-size:.6rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.match-stage .live-badge{color:var(--fire);font-weight:600;}
+.match-teams{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;}
+.match-team{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;}
+.match-flag{font-size:1.6rem;line-height:1;}
+.match-name{font-size:.7rem;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:80px;}
+.match-score-box{text-align:center;}
+.match-score{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:.04em;color:var(--text);line-height:1;}
+.match-score.live{color:var(--fire);}
+.match-time{font-size:.65rem;color:var(--muted);margin-top:2px;}
+.match-roast-hint{font-size:.65rem;color:var(--fire);text-align:center;margin-top:8px;opacity:.8;}
+
+/* STANDINGS */
+.standings-wrap{margin-bottom:8px;}
+.group-select{background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:.82rem;padding:8px 10px;width:100%;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23666' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;margin-bottom:8px;}
+.group-select:focus{outline:none;border-color:var(--fire);}
+.standings-table{width:100%;border-collapse:collapse;font-size:.72rem;}
+.standings-table th{color:var(--muted);font-weight:500;padding:4px 6px;text-align:center;border-bottom:1px solid var(--border);}
+.standings-table th:first-child,.standings-table td:first-child{text-align:left;}
+.standings-table td{padding:6px 6px;text-align:center;border-bottom:1px solid rgba(255,255,255,.03);}
+.standings-table tr:last-child td{border-bottom:none;}
+.standings-table .team-cell{display:flex;align-items:center;gap:6px;}
+.standings-table .pos-num{color:var(--muted);width:14px;text-align:right;flex-shrink:0;}
+.standings-table .qualified{background:rgba(0,200,83,.06);}
+.standings-table .qualified .pos-num{color:var(--green);}
+.standings-table .pts-col{font-weight:600;color:var(--text);}
+
+/* SKELETON LOADER */
+.skeleton{background:linear-gradient(90deg,var(--surface) 25%,var(--surface2) 50%,var(--surface) 75%);background-size:200% 100%;animation:skeleton-shine 1.5s infinite;border-radius:6px;height:14px;margin-bottom:6px;}
+@keyframes skeleton-shine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skeleton-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -224,6 +272,28 @@ footer a{color:var(--muted);text-decoration:none;}
     </div>
 
     <div class="ticker-wrap"><div class="ticker-track" id="ticker"></div></div>
+
+    <!-- LIVE SCORES -->
+    <div class="scores-section">
+      <div class="scores-header">
+        <div class="scores-title" id="scores-title">⚽ Loading scores...</div>
+        <div class="scores-updated" id="scores-updated"></div>
+      </div>
+      <div class="scores-tabs" id="scores-tabs">
+        <button class="scores-tab active" data-tab="live" onclick="switchTab('live')"><span class="live-pip"></span>LIVE</button>
+        <button class="scores-tab" data-tab="today" onclick="switchTab('today')">Today</button>
+        <button class="scores-tab" data-tab="recent" onclick="switchTab('recent')">Recent</button>
+        <button class="scores-tab" data-tab="upcoming" onclick="switchTab('upcoming')">Upcoming</button>
+        <button class="scores-tab" data-tab="standings" onclick="switchTab('standings')">Standings</button>
+      </div>
+      <div id="scores-content">
+        <!-- skeleton loaders -->
+        <div class="skeleton-card"><div class="skeleton" style="width:40%;height:10px;margin-bottom:10px;"></div><div class="skeleton" style="height:40px;"></div></div>
+        <div class="skeleton-card"><div class="skeleton" style="width:40%;height:10px;margin-bottom:10px;"></div><div class="skeleton" style="height:40px;"></div></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
 
     <div class="stars-section">
       <div class="stars-label">🌟 Quick pick by star player</div>
@@ -620,6 +690,189 @@ function renderMeme(t1,t2,roastData){
 }
 
 
+// ===== LIVE SCORES =====
+let scoresData = null;
+let currentTab = 'live';
+
+async function fetchScores() {
+  try {
+    const res = await fetch('/api/scores');
+    if (!res.ok) throw new Error('scores fetch failed');
+    scoresData = await res.json();
+    updateScoresUI();
+    // Update timestamp
+    const d = new Date(scoresData.updated);
+    document.getElementById('scores-updated').textContent = 'Updated ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  } catch(e) {
+    document.getElementById('scores-content').innerHTML = `<div style="text-align:center;padding:20px;font-size:.8rem;color:var(--muted);">⚠️ Could not load scores. <button onclick="fetchScores()" style="background:none;border:none;color:var(--fire);cursor:pointer;font-size:.8rem;">Retry</button></div>`;
+    console.error('Scores error:', e);
+  }
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.scores-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  updateScoresUI();
+}
+
+function updateScoresUI() {
+  if (!scoresData) return;
+  const {live, today, recent, upcoming, groups} = scoresData;
+
+  // Update tab labels with counts
+  const liveCount = live.length;
+  document.querySelector('[data-tab="live"]').innerHTML = liveCount > 0
+    ? `<span class="live-pip"></span>LIVE (${liveCount})`
+    : `LIVE`;
+
+  const title = {
+    live: liveCount > 0 ? `🔴 ${liveCount} Match${liveCount>1?'es':''} Live Now` : '⚽ No Live Matches',
+    today: '📅 Today\'s Matches',
+    recent: '✅ Recent Results',
+    upcoming: '🔜 Upcoming Matches',
+    standings: '📊 Group Standings',
+  };
+  document.getElementById('scores-title').textContent = title[currentTab];
+
+  const content = document.getElementById('scores-content');
+
+  if (currentTab === 'standings') {
+    renderStandings(groups, content);
+    return;
+  }
+
+  const matchMap = {live, today, recent, upcoming};
+  const matches = matchMap[currentTab] || [];
+
+  if (matches.length === 0) {
+    const msgs = {
+      live: '😴 No live matches right now. Check upcoming or recent.',
+      today: '📅 No more matches scheduled today.',
+      recent: '🕐 No recent results yet.',
+      upcoming: '🔜 No upcoming matches in the next 3 days.',
+    };
+    content.innerHTML = `<div style="text-align:center;padding:24px 16px;font-size:.82rem;color:var(--muted);">${msgs[currentTab]}</div>`;
+    return;
+  }
+
+  content.innerHTML = matches.map(m => renderMatchCard(m)).join('');
+}
+
+function renderMatchCard(m) {
+  const isLive = ['IN_PLAY','PAUSED','LIVE'].includes(m.status);
+  const isFinished = m.status === 'FINISHED';
+  const h = m.homeTeam?.name || '?';
+  const a = m.awayTeam?.name || '?';
+  const hf = getFlagFromName(h);
+  const af = getFlagFromName(a);
+  const hs = m.score?.fullTime?.home ?? m.score?.halfTime?.home ?? (isLive ? (m.score?.fullTime?.home ?? '0') : '-');
+  const as_ = m.score?.fullTime?.away ?? m.score?.halfTime?.away ?? (isLive ? (m.score?.fullTime?.away ?? '0') : '-');
+  const minute = m.minute ? m.minute+"'" : '';
+  const matchDate = new Date(m.utcDate);
+  const timeStr = isFinished ? 'FT' : isLive ? (minute || 'LIVE') : matchDate.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const stage = m.stage ? m.stage.replace(/_/g,' ') : (m.group || 'Group Stage');
+
+  const hShort = h.length > 10 ? h.split(' ').pop() : h;
+  const aShort = a.length > 10 ? a.split(' ').pop() : a;
+
+  return `<div class="match-card ${isLive?'live-card':''}" onclick="quickRoast('${h}','${a}')">
+    <div class="match-stage">${isLive?`<span class="live-badge">🔴 LIVE ${minute}</span> · `:''}${stage}</div>
+    <div class="match-teams">
+      <div class="match-team">
+        <div class="match-flag">${hf}</div>
+        <div class="match-name">${hShort}</div>
+      </div>
+      <div class="match-score-box">
+        <div class="match-score ${isLive?'live':''}">${isFinished||isLive ? `${hs} — ${as_}` : 'VS'}</div>
+        <div class="match-time">${timeStr}</div>
+      </div>
+      <div class="match-team">
+        <div class="match-flag">${af}</div>
+        <div class="match-name">${aShort}</div>
+      </div>
+    </div>
+    <div class="match-roast-hint">🔥 Tap to roast these fanbases →</div>
+  </div>`;
+}
+
+function renderStandings(groups, content) {
+  if (!groups || groups.length === 0) {
+    content.innerHTML = `<div style="text-align:center;padding:20px;font-size:.8rem;color:var(--muted);">Standings not available yet</div>`;
+    return;
+  }
+  // Group selector
+  const selectHtml = `<select class="group-select" onchange="showGroup(this.value)" id="group-select">
+    ${groups.map((g,i) => `<option value="${i}">${g.group||'Group '+(i+1)}</option>`).join('')}
+  </select>`;
+  content.innerHTML = selectHtml + `<div id="group-table"></div>`;
+  showGroup(0);
+}
+
+function showGroup(idx) {
+  if (!scoresData?.groups?.[idx]) return;
+  const g = scoresData.groups[idx];
+  const rows = g.table.map((t,i) => `
+    <tr class="${i<2?'qualified':''}">
+      <td><div class="team-cell"><span class="pos-num">${t.pos}</span>${t.flag} ${t.team}</div></td>
+      <td>${t.played}</td><td>${t.won}</td><td>${t.drawn}</td><td>${t.lost}</td>
+      <td>${t.gf}:${t.ga}</td><td class="pts-col">${t.pts}</td>
+    </tr>`).join('');
+  document.getElementById('group-table').innerHTML = `
+    <table class="standings-table">
+      <thead><tr><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="font-size:.62rem;color:var(--green);margin-top:6px;">▓ = Qualified / on track</div>`;
+}
+
+function getFlagFromName(name) {
+  const map = {
+    'Mexico':'🇲🇽','South Africa':'🇿🇦','Korea Republic':'🇰🇷','Czechia':'🇨🇿','Czech Republic':'🇨🇿',
+    'Canada':'🇨🇦','Bosnia and Herzegovina':'🇧🇦','Qatar':'🇶🇦','Switzerland':'🇨🇭',
+    'Brazil':'🇧🇷','Morocco':'🇲🇦','Haiti':'🇭🇹','Scotland':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+    'United States':'🇺🇸','Paraguay':'🇵🇾','Australia':'🇦🇺','Turkey':'🇹🇷',
+    'Germany':'🇩🇪','Curaçao':'🇨🇼',"Côte d'Ivoire":'🇨🇮','Ecuador':'🇪🇨',
+    'Netherlands':'🇳🇱','Japan':'🇯🇵','Tunisia':'🇹🇳','Sweden':'🇸🇪',
+    'Belgium':'🇧🇪','Egypt':'🇪🇬','Iran':'🇮🇷','New Zealand':'🇳🇿',
+    'Spain':'🇪🇸','Cabo Verde':'🇨🇻','Saudi Arabia':'🇸🇦','Uruguay':'🇺🇾',
+    'France':'🇫🇷','Senegal':'🇸🇳','Iraq':'🇮🇶','Norway':'🇳🇴',
+    'Argentina':'🇦🇷','Algeria':'🇩🇿','Austria':'🇦🇹','Jordan':'🇯🇴',
+    'Portugal':'🇵🇹','DR Congo':'🇨🇩','Uzbekistan':'🇺🇿','Colombia':'🇨🇴',
+    'England':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Croatia':'🇭🇷','Ghana':'🇬🇭','Panama':'🇵🇦',
+  };
+  return map[name] || '🏳️';
+}
+
+// Quick roast from match card tap
+function quickRoast(team1name, team2name) {
+  const s1 = document.getElementById('team1');
+  const s2 = document.getElementById('team2');
+  // Try to match API name to our TEAMS list
+  const findTeam = (apiName) => {
+    const direct = TEAMS.find(t => t.name === apiName);
+    if (direct) return direct.name;
+    // Fuzzy: check if team name contains our name or vice versa
+    const fuzzy = TEAMS.find(t =>
+      apiName.toLowerCase().includes(t.name.toLowerCase()) ||
+      t.name.toLowerCase().includes(apiName.toLowerCase()) ||
+      (apiName === 'United States' && t.name === 'USA') ||
+      (apiName === 'Korea Republic' && t.name === 'South Korea') ||
+      (apiName === "Côte d'Ivoire" && t.name === 'Ivory Coast') ||
+      (apiName === 'Bosnia and Herzegovina' && t.name === 'Bosnia & Herzegovina')
+    );
+    return fuzzy ? fuzzy.name : null;
+  };
+  const t1 = findTeam(team1name);
+  const t2 = findTeam(team2name);
+  if (t1) s1.value = t1;
+  if (t2) s2.value = t2;
+  document.querySelector('.picker-section').scrollIntoView({behavior:'smooth'});
+  if (t1 && t2) {
+    setTimeout(() => showToast(`🔥 ${t1} vs ${t2} loaded — tap Burn!`), 400);
+  }
+}
+
+
   "Consulting 90 years of football trauma...",
   "Reviewing every controversial VAR decision...",
   "Counting penalty shootout failures...",
@@ -675,6 +928,11 @@ function init(){
 
   // Bump count animation
   animateCount();
+
+  // Fetch live scores
+  fetchScores();
+  // Auto-refresh every 60 seconds
+  setInterval(fetchScores, 60000);
 }
 
 function animateCount(){
